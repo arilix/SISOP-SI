@@ -694,6 +694,34 @@ journalctl -u named -n 30 --no-pager
 
 Penyebab umum lainnya: titik koma `;` kurang, kurung `{ }` tidak berpasangan, nama file zone tidak sama dengan yang ditulis di `named.conf.local`, atau lupa titik di akhir nama domain pada file zone (misal `ns1.rocky.sisjarlab.io.`).
 
+### 5.7b Query ditolak (`REFUSED`) karena `allow-query`
+
+Jika `nslookup` dari Windows/klien lain menghasilkan `REFUSED` atau `query refused`, padahal `named` sudah `active (running)`, berarti alamat klien tidak termasuk di daftar `allow-query` (misalnya IP klien di luar `10.10.80.0/25`). Agar query dari mana pun diizinkan, ubah `allow-query` menjadi `any`:
+
+```bash
+nano /etc/named.conf
+```
+
+```text
+allow-query     { any; };
+```
+
+Lalu periksa dan muat ulang:
+
+```bash
+named-checkconf
+systemctl restart named
+```
+
+Pastikan firewall juga mengizinkan DNS:
+
+```bash
+firewall-cmd --permanent --add-service=dns
+firewall-cmd --reload
+```
+
+> `any` mengizinkan semua alamat untuk melakukan query, jadi gunakan hanya di lingkungan praktikum/host-only. Untuk lingkungan nyata, batasi dengan `{ localhost; 10.10.80.0/25; };`.
+
 ### 5.8 Log `named`: `network unreachable resolving './NS/IN'`
 
 Ini normal untuk jaringan host-only tanpa internet (BIND mencoba menghubungi root server). Selama status `active (running)` dan `nslookup` ke server lokal berhasil, abaikan.

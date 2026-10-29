@@ -378,10 +378,10 @@ options {
         memstatistics-file "/var/named/data/named_mem_stats.txt";
         secroots-file   "/var/named/data/named.secroots";
         recursing-file  "/var/named/data/named.recursing";
-        allow-query     { localhost; 10.10.80.0/25; };
+        allow-query     { any; };
 ```
 
-> Perhatikan: pada `allow-query` yang ditulis adalah **alamat jaringan** `10.10.80.0/25`, bukan `10.10.80.1/25`. Lihat bagian [Solusi Error](#5-solusi-jika-mendapatkan-error) jika `named-checkconf` menolak konfigurasi.
+> Perhatikan: `allow-query` diisi `any` agar query dari klien mana pun tidak ditolak (`REFUSED`). Jika ingin membatasi ke jaringan tertentu, tulis **alamat jaringan** `10.10.80.0/25`, bukan `10.10.80.1/25`. Lihat bagian [Solusi Error](#5-solusi-jika-mendapatkan-error) jika `named-checkconf` menolak konfigurasi.
 
 4. Pada line paling akhir di konfigurasi, tambahkan line berikut.
 
@@ -673,10 +673,10 @@ nano /etc/named.conf
 ```
 
 ```text
-allow-query     { localhost; 10.10.80.0/25; };
+allow-query     { any; };
 ```
 
-Lalu periksa dan jalankan:
+(Jika tetap ingin dibatasi, gunakan `{ localhost; 10.10.80.0/25; };`.) Lalu periksa dan jalankan:
 
 ```bash
 named-checkconf

@@ -874,6 +874,51 @@ Pada modul sebelumnya sudah melakukan konfigurasi web server dan DNS, selanjutny
 
     ![Halaman tidak dapat diakses](images/p35_y297.png)
 
+### 4.7 Catatan Pengujian dan Solusi Error (tambahan, tidak ada di modul asli)
+
+Bagian ini membantu jika Thunderbird di Windows tidak bisa terhubung atau hasil uji firewall tidak sesuai. Ganti `namapendek01` / `namapendek02` dengan nama pendek masing-masing.
+
+**1. Pastikan nama `mail` bisa di-resolve dari Windows**
+
+```bat
+nslookup mail.rocky.sisjarlab.io
+```
+
+Hasil yang benar menampilkan alamat `10.10.80.1`. Jika gagal, periksa DNS pada VMnet1 (`10.10.80.1` sebagai Preferred DNS server), record `MX` dan `mail` pada zona forward, naikkan nilai *Serial* setiap mengubah file zone, lalu `systemctl restart named`.
+
+**2. Firewall akhir modul memblokir SMTP, POP3, IMAP, dan HTTP**
+
+Setelah langkah 4.6 selesai, hanya service `dns` (dan `http` jika belum dihapus) yang diizinkan. Akibatnya Thunderbird di Windows tidak bisa terhubung ke port 25/110/143. Sebelum membuat akun di Thunderbird Windows, jalankan di VM, pilih salah satu:
+
+```bash
+# Opsi 1: matikan sementara firewalld
+[root@rocky ~]# systemctl stop firewalld
+```
+
+```bash
+# Opsi 2: izinkan service yang dibutuhkan
+[root@rocky ~]# firewall-cmd --zone=public --add-service={smtp,pop3,imap,http} --permanent
+[root@rocky ~]# firewall-cmd --reload
+```
+
+**3. Buat akun di Thunderbird Windows**
+
+- Email: `namapendek01@mail.rocky.sisjarlab.io`, password sama dengan username.
+- Pilih **Configure manually**.
+- Pada **Outgoing Server**, Authentication method pilih **No authentication**.
+
+**4. Buat akun di Thunderbird Rocky Linux dan kirim e-mail**
+
+Buka Thunderbird dari desktop Rocky Linux (menu Activities atau `thunderbird &`), buat akun `namapendek02@mail.rocky.sisjarlab.io`, kirim e-mail ke `namapendek01@mail.rocky.sisjarlab.io`, lalu cek inbox di Thunderbird Windows.
+
+**5. Uji firewall (bagian 4.6 langkah 8 dan 12) dari Windows**
+
+1. Jalankan `ipconfig /flushdns`.
+2. Saat service `http` **diizinkan**, buka `rocky.sisjarlab.io` di browser Windows: halaman tampil.
+3. Setelah service `http` **dihapus** dan firewalld di-restart, buka lagi (hapus cache browser): halaman tidak bisa dibuka.
+
+> Pengujian harus dilakukan **dari Windows**. Tes `curl` dari dalam VM sendiri tidak melewati firewall, sehingga hasil `200 OK` di sana tidak membuktikan apa pun tentang pemblokiran.
+
 ## 5. Daftar Pustaka
 
 1. Laboratorium Sistem Operasi dan Jaringan Komputer. (2015). *Modul Praktikum Sistem Operasi 2015*. Bandung, Laboratorium Sistem Operasi dan Jaringan Komputer.

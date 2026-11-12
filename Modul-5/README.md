@@ -692,13 +692,53 @@ Lakukan konfigurasi SASL yang berhubungan dengan postfix, berikut beberapa file 
 
 ### 4.5 Konfigurasi Thunderbird
 
-> **Catatan tambahan (tidak ada di modul asli):** Langkah di bawah memakai Thunderbird pada Main OS (Windows), tetapi modul tidak menjelaskan cara memasangnya. Jika belum terpasang, pasang terlebih dahulu:
->
-> 1. Buka <https://www.thunderbird.net>, pilih bahasa dan Windows, lalu klik **Download**.
-> 2. Jalankan file `Thunderbird Setup ... .exe` dan ikuti wizard (**Next** → **Install** → **Finish**).
-> 3. Atau lewat terminal (jika `winget` tersedia): `winget install Mozilla.Thunderbird`
->
-> Tampilan pada modul memakai Thunderbird versi 102; versi yang lebih baru bisa memiliki wizard akun yang sedikit berbeda (cari opsi **Configure manually** / **Manual config**). Pada Rocky Linux, Thunderbird sudah terpasang lewat perintah `dnf` di bagian 4.2.
+#### Tutorial instalasi Thunderbird (tambahan, tidak ada di modul asli)
+
+Bagian 4.5 memakai Thunderbird di **dua tempat**: Main OS (Windows) untuk `namapendek01` dan Rocky Linux untuk `namapendek02`. Modul hanya menjelaskan pemasangan di Rocky Linux (bagian 4.2), jadi pemasangan di Windows dijelaskan di sini.
+
+**A. Thunderbird di Windows (Main OS)**
+
+Cara 1 — lewat installer:
+
+1. Buka <https://www.thunderbird.net>, pilih bahasa **English (US)** dan sistem **Windows**, lalu klik **Download**.
+2. Jalankan file `Thunderbird Setup ... .exe` dan ikuti wizard (**Next** → **Install** → **Finish**).
+3. Buka **Thunderbird** dari Start Menu. Akan muncul layar *Welcome to Mozilla Thunderbird*.
+
+Cara 2 — lewat terminal (Command Prompt/PowerShell), jika `winget` tersedia:
+
+```bat
+winget install --id Mozilla.Thunderbird --exact --source winget
+```
+
+Cek hasil pemasangan:
+
+```bat
+winget list --id Mozilla.Thunderbird
+```
+
+**B. Thunderbird di Rocky Linux (VM)**
+
+Thunderbird terpasang bersama paket lain pada bagian 4.2. Jika belum, pasang dan cek dengan:
+
+```bash
+[root@rocky ~]# dnf install -y thunderbird
+[root@rocky ~]# rpm -q thunderbird
+```
+
+Jalankan dari desktop Rocky Linux (menu **Activities** → ketik *Thunderbird*), atau dari terminal pada sesi desktop:
+
+```bash
+[rocky@rocky ~]$ thunderbird &
+```
+
+> Thunderbird adalah aplikasi grafis, jadi harus dibuka dari desktop Rocky Linux (bukan lewat PuTTY/SSH tanpa X11).
+
+**Catatan versi dan koneksi**
+
+- Tampilan pada modul memakai Thunderbird versi 102. Versi yang lebih baru bisa memiliki wizard akun yang sedikit berbeda; cari opsi **Configure manually** / **Manual config** pada form akun.
+- Sebelum membuat akun, pastikan VMnet1 di Windows sudah `10.10.80.2` dan `ping 10.10.80.1` ke Rocky Linux berhasil (bagian 4.2), serta `nslookup mail.rocky.sisjarlab.io` mengembalikan `10.10.80.1`.
+
+**Langkah pembuatan akun dan pengujian ada di nomor 1–14 di bawah.**
 
 1. Buka Command Prompt pada Main OS.
 2. Selanjutnya ketikkan `nslookup mail.rocky.sisjarlab.io`.

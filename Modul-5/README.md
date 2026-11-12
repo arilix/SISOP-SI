@@ -692,6 +692,14 @@ Lakukan konfigurasi SASL yang berhubungan dengan postfix, berikut beberapa file 
 
 ### 4.5 Konfigurasi Thunderbird
 
+> **Catatan tambahan (tidak ada di modul asli):** Langkah di bawah memakai Thunderbird pada Main OS (Windows), tetapi modul tidak menjelaskan cara memasangnya. Jika belum terpasang, pasang terlebih dahulu:
+>
+> 1. Buka <https://www.thunderbird.net>, pilih bahasa dan Windows, lalu klik **Download**.
+> 2. Jalankan file `Thunderbird Setup ... .exe` dan ikuti wizard (**Next** → **Install** → **Finish**).
+> 3. Atau lewat terminal (jika `winget` tersedia): `winget install Mozilla.Thunderbird`
+>
+> Tampilan pada modul memakai Thunderbird versi 102; versi yang lebih baru bisa memiliki wizard akun yang sedikit berbeda (cari opsi **Configure manually** / **Manual config**). Pada Rocky Linux, Thunderbird sudah terpasang lewat perintah `dnf` di bagian 4.2.
+
 1. Buka Command Prompt pada Main OS.
 2. Selanjutnya ketikkan `nslookup mail.rocky.sisjarlab.io`.
 
